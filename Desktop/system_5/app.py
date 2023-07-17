@@ -29,18 +29,18 @@ def trainModel(df):
     return best_model, best_params, y_test, y_pred
 
 def getData():
-    with open('outfield_clustered.pkl', 'rb') as file:
+    with open(r'outfield_clustered.pkl', 'rb') as file:
         player_df = pd.DataFrame(pickle.load(file))
-    with open('player_ID.pickle', 'rb') as file:
+    with open(r'player_ID.pickle', 'rb') as file:
         player_ID = pickle.load(file)
-    with open('engine.pickle', 'rb') as file:
+    with open(r'engine.pickle', 'rb') as file:
         engine = pickle.load(file)
     
-    with open('gk_clustered.pkl', 'rb') as file:
+    with open(r'gk_clustered.pkl', 'rb') as file:
         gk_df = pd.DataFrame(pickle.load(file))
-    with open('gk_ID.pickle', 'rb') as file:
+    with open(r'gk_ID.pickle', 'rb') as file:
         gk_ID = pickle.load(file)
-    with open('gk_engine.pickle', 'rb') as file:
+    with open(r'gk_engine.pickle', 'rb') as file:
         gk_engine = pickle.load(file)
     
     outfield_model = None
