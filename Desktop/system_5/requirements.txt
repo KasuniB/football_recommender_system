@@ -1,5 +1,5 @@
 pandas
-pickle
 streamlit
 numpy
 scikit-learn
+pip==23.2
