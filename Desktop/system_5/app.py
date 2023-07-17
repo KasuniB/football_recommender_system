@@ -29,37 +29,47 @@ def trainModel(df):
     return best_model, best_params, y_test, y_pred
 
 def getData():
-    with open(r'outfield_clustered.pkl', 'rb') as file:
+    current_directory = os.path.dirname(os.path.abspath(__file__))
+    outfield_clustered_path = os.path.join(current_directory, 'outfield_clustered.pkl')
+    player_ID_path = os.path.join(current_directory, 'player_ID.pickle')
+    engine_path = os.path.join(current_directory, 'engine.pickle')
+    gk_clustered_path = os.path.join(current_directory, 'gk_clustered.pkl')
+    gk_ID_path = os.path.join(current_directory, 'gk_ID.pickle')
+    gk_engine_path = os.path.join(current_directory, 'gk_engine.pickle')
+
+    with open(outfield_clustered_path, 'rb') as file:
         player_df = pd.DataFrame(pickle.load(file))
-    with open(r'player_ID.pickle', 'rb') as file:
+    with open(player_ID_path, 'rb') as file:
         player_ID = pickle.load(file)
-    with open(r'engine.pickle', 'rb') as file:
+    with open(engine_path, 'rb') as file:
         engine = pickle.load(file)
     
-    with open(r'gk_clustered.pkl', 'rb') as file:
+    with open(gk_clustered_path, 'rb') as file:
         gk_df = pd.DataFrame(pickle.load(file))
-    with open(r'gk_ID.pickle', 'rb') as file:
+    with open(gk_ID_path, 'rb') as file:
         gk_ID = pickle.load(file)
-    with open(r'gk_engine.pickle', 'rb') as file:
+    with open(gk_engine_path, 'rb') as file:
         gk_engine = pickle.load(file)
     
     outfield_model = None
     gk_model = None
 
-    if not os.path.isfile('outfield_model.pickle') or os.path.getsize('outfield_model.pickle') == 0:
+    outfield_model_path = os.path.join(current_directory, 'outfield_model.pickle')
+    if not os.path.isfile(outfield_model_path) or os.path.getsize(outfield_model_path) == 0:
         outfield_model, _, _, _ = trainModel(player_df)
-        with open('outfield_model.pickle', 'wb') as file:
+        with open(outfield_model_path, 'wb') as file:
             pickle.dump(outfield_model, file)
     else:
-        with open('outfield_model.pickle', 'rb') as file:
+        with open(outfield_model_path, 'rb') as file:
             outfield_model = pickle.load(file)
 
-    if not os.path.isfile('gk_model.pickle') or os.path.getsize('gk_model.pickle') == 0:
+    gk_model_path = os.path.join(current_directory, 'gk_model.pickle')
+    if not os.path.isfile(gk_model_path) or os.path.getsize(gk_model_path) == 0:
         gk_model, _, _, _ = trainModel(gk_df)
-        with open('gk_model.pickle', 'wb') as file:
+        with open(gk_model_path, 'wb') as file:
             pickle.dump(gk_model, file)
     else:
-        with open('gk_model.pickle', 'rb') as file:
+        with open(gk_model_path, 'rb') as file:
             gk_model = pickle.load(file)
 
     return player_df, player_ID, engine, gk_df, gk_ID, gk_engine, outfield_model, gk_model
@@ -128,8 +138,6 @@ def getGoalkeeperRecommendations(df, ID, metric, league, comparison, query, coun
     return df_res
 
 
-
-
 st.title('Football Player Recommender')
 st.write('A Web App to recommend football players who play similar to your favorite players!')
 
@@ -156,8 +164,6 @@ if player_type == 'Outfield players':
     result = getOutfieldRecommendations(df, ID, metric, league, comparison, query, count, model=outfield_model)
 else:
     result = getGoalkeeperRecommendations(df, ID, metric, league, comparison, query, count, model=gk_model)
-
-
 
 st.markdown('### Here are players who play similar to {}'.format(query.split(' (')[0]))
 st.dataframe(result)
